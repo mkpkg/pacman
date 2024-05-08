@@ -1,0 +1,42 @@
+pkgname=cloudflared
+pkgver=2022.9.0
+pkgrel=2
+pkgdesc="Cloudflare Tunnel client (formerly Argo Tunnel)"
+arch=("x86_64" "i686" "aarch64" "armv6h" "armv7h")
+url="https://github.com/cloudflare/cloudflared"
+license=("custom")
+depends=("glibc")
+provides=("cloudflared")
+conflicts=("cloudflared")
+source=("${pkgname}-LICENSE::https://raw.githubusercontent.com/cloudflare/cloudflared/${pkgver}/LICENSE"
+        "cloudflared.yml"
+        "cloudflared@.service"
+        "cloudflared-dns.service"
+        "cloudflared-tunnel@.service"
+        "sysusers.d")
+source_x86_64=("${pkgname}-x86_64-${pkgver}::${url}/releases/download/${pkgver}/cloudflared-linux-amd64")
+source_aarch64=("${pkgname}-aarch64-${pkgver}::${url}/releases/download/${pkgver}/cloudflared-linux-arm64")
+sha256sums=(
+    '58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd'
+	'e769786afdfbd486a4d7ca99495dbe955c25e41b5e012b722b018ca17f269dac'
+    '42b529639a8011e3cc89e8c742ff99a76b53500fe1c4ecfb0044eabd721c4d6e'
+    'bc40e3f7e1b21b93a949a1b1c05639584943d9ce9cc7ccb96612688eeb9fd206'
+    'f46b50d941c0c225a6562185cf3f42d0cb0acb090fb10f8ccb5143c4865c4780'
+    '57ad7b9a5be2985519e6e4bd812f5956ca6152c0f6e1a5ac49c4623586f968b6')
+sha256sums_x86_64=('c1e8bb96ddb4298831a4cf473d26f6fd7a09026dc43d07f3bde73ca35e07493d')
+sha256sums_aarch64=('f5151bd4d1ae81fb201193de4f46591ddedd74bf09df1d55211534637ea88205')
+
+package() {
+  # Install License
+  install -Dm644 ${pkgname}-LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+
+  # Install Binary
+  install -Dm755 ${pkgname}-*-${pkgver} ${pkgdir}/usr/bin/cloudflared
+
+  # Configuration File
+  install -Dm644 cloudflared.yml ${pkgdir}/etc/cloudflared/cloudflared.yml
+  install -Dm644 -t ${pkgdir}/usr/lib/systemd/system cloudflared{@,-dns,-tunnel@}.service
+
+  # Post install
+  install -Dm644 sysusers.d ${pkgdir}/usr/lib/sysusers.d/cloudflared.conf
+}

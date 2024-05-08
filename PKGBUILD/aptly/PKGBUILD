@@ -1,0 +1,44 @@
+pkgname=aptly
+pkgver=1.5.0
+pkgrel=1
+pkgdesc="A Swiss Army knife for Debian repository management."
+url="https://www.aptly.info"
+license=('MIT')
+options=('!strip')
+arch=('i686' 'x86_64')
+source=("https://github.com/aptly-dev/aptly/releases/download/v${pkgver}/aptly_${pkgver}_amd64.deb"
+	"https://github.com/aptly-dev/aptly/raw/master/man/aptly.1"
+	"https://github.com/aptly-dev/aptly/raw/master/aptly.service"
+	"https://github.com/aptly-dev/aptly/raw/master/aptly-api.service"
+	"https://github.com/aptly-dev/aptly/raw/master/LICENSE"
+)
+
+sha256sums=(
+	'c606c06ef2ddc6f0b225d6cbecaccd4b17f537ddc8a3fc72a12be94f864674cb'
+	'377c0761f570cd0b8c9cb1e3d288f584a9cdb0fa709c6e86a560764de7ddc885'
+	'f96c4d9f23297bced7ab89e7c63b9f8c303fe5ff4a9ce3dcddc0a4b930c19310'
+	'798dd5cd39daab6485d699762b50a9cf45a518c70cbf3919d310bbbfb5ee1a90'
+	'54ebbec1e30f686151a4f2cc41359b7890fa6e5601f132431f0d0bfb5ec66280'
+)
+
+package() {
+	bsdtar -xf data.tar.gz
+
+	cp -fr ${srcdir}/usr ${pkgdir}/
+	mv ${pkgdir}/usr/share/zsh/vendor-completions ${pkgdir}/usr/share/zsh/site-functions
+	chmod +x ${pkgdir}/usr/bin/aptly
+
+  	install -Dm644 ${srcdir}/etc/bash_completion.d/aptly \
+    	"${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
+
+	install -Dm644 LICENSE \
+    	"${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+	install -Dm644 "${pkgname}.service" \
+    	-t "${pkgdir}/usr/lib/systemd/system"
+	install -Dm644 "${pkgname}-api.service" \
+    	-t "${pkgdir}/usr/lib/systemd/system"
+
+  	install -Dm644 ${srcdir}/aptly.1 \
+    	"${pkgdir}/usr/share/man/man1/${pkgname}.1"
+}

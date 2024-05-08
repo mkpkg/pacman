@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Electron Beta
+Icon=electron-beta
+Exec=electron-beta
+Categories=Development;GTK;
+StartupNotify=true

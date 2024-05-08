@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Clash For Windows
+Comment=Clash GUI
+Exec=/usr/bin/cfw
+Icon=/usr/share/pixmaps/clash.png
+Terminal=false
+Keywords=clash
+Categories=Network;Utility;

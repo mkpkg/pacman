@@ -1,0 +1,21 @@
+pkgname=powershell
+pkgver=7.2.5
+pkgrel=1
+pkgdesc='A cross-platform automation and configuration tool/framework'
+arch=('x86_64')
+url='https://github.com/PowerShell/PowerShell'
+license=('MIT')
+depends=('krb5' 'gcc-libs' 'glibc' 'lttng-ust' 'zlib' 'openssl-1.0' 'icu')
+source=("https://github.com/PowerShell/PowerShell/releases/download/v7.2.5/${pkgname}-${pkgver}-linux-x64.tar.gz")
+sha256sums=('a6ca50bc03a1f508b0177a9ddb63164d344a6b9cee4cf4d459a04e72ea10c468')
+install=powershell.install
+
+package() {
+	install -dm755 ${pkgdir}/usr/bin
+	install -dm755 ${pkgdir}/opt/microsoft/powershell/7
+	cp -fr ${srcdir}/* ${pkgdir}/opt/microsoft/powershell/7/
+	ln -s /opt/microsoft/powershell/7/pwsh ${pkgdir}/usr/bin/pwsh
+	rm -fr ${pkgdir}/${pkgname}-${pkgver}-linux-x64.tar.gz
+	rm -fr ${pkgdir}/opt/microsoft/powershell/7/LICENSE.txt
+	install -Dm644 ${srcdir}/LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

@@ -1,0 +1,40 @@
+pkgname=electron13
+pkgver=13.6.9
+pkgrel=1
+pkgdesc='Build cross platform desktop apps with web technologies'
+arch=('x86_64')
+url='https://electronjs.org/'
+license=('MIT' 'custom')
+depends=('c-ares' 'ffmpeg' 'gtk3' 'libevent' 'libxslt' 'minizip' 'nss' 're2'
+         'snappy')
+optdepends=('kde-cli-tools: file deletion support (kioclient5)'
+            'libappindicator-gtk3: StatusNotifierItem support'
+            'pipewire: WebRTC desktop sharing under Wayland'
+            'trash-cli: file deletion support (trash-put)'
+            "xdg-utils: open URLs with desktop's default (xdg-email, xdg-open)")
+provides=("${pkgname}")
+options=('!lto') # Electron adds its own flags for ThinLTO
+source=("https://github.com/electron/electron/releases/download/v${pkgver}/electron-v${pkgver}-linux-x64.zip"
+		"https://github.com/electron/electron/raw/main/default_app/icon.png"
+        "${pkgname}.desktop"
+        "${pkgname}.sh")
+
+sha256sums=('5e29701394041ba2acd8a9bb042d77967c399b8fe007d7ffbd1d3e6bfdb9eb8a'
+			'b0f6f06d7e94053dabcc7dd8adc83d925089dbca55df0ca573b267b710e1f79d'
+            'eab960251d315a8f13fa25f76b4d7519e931af0a7ac3ec46c05245e5d3682744'
+            '687bb8b31761bf0394bcd4a0abb1c5e7672d3eadd9c1f4a2119d51b9cfdac93d')
+
+package() {
+	install -dm755 "${pkgdir}/usr/lib/${pkgname}"
+	install -dm755 "${pkgdir}/usr/bin"
+	cp -fr ${srcdir}/* "${pkgdir}/usr/lib/${pkgname}/"
+	chmod -R 755 "${pkgdir}/usr/lib/${pkgname}"
+	rm -fr "${pkgdir}/usr/lib/${pkgname}/LICENSE"
+	rm -fr ${pkgdir}/usr/lib/${pkgname}/*.{zip,desktop,png,html,sh}
+	install -Dm644 ${srcdir}/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	install -Dm644 ${srcdir}/LICENSES.chromium.html "${pkgdir}/usr/share/licenses/${pkgname}/LICENSES.chromium.html"
+	install -Dm644 ${srcdir}/${pkgname}.desktop "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+	install -Dm644 ${srcdir}/icon.png "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+	install -Dm644 ${srcdir}/${pkgname}.sh "${pkgdir}/usr/bin/${pkgname}"
+	chmod +x "${pkgdir}/usr/bin/${pkgname}"
+}

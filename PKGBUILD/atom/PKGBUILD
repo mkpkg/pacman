@@ -1,0 +1,18 @@
+pkgname=atom
+pkgver=1.60.0
+pkgrel=1
+pkgdesc='A hackable text editor for the 21st Century'
+arch=('x86_64')
+license=('mit')
+url='https://atom.io'
+source=("https://github.com/atom/atom/releases/download/v${pkgver}/atom-amd64.deb")
+sha256sums=('SKIP')
+
+build(){
+	msg "Extract Package"
+	tar -xf data.tar.xz
+}
+
+package() {
+	cp -fr ${srcdir}/usr ${pkgdir}/
+}

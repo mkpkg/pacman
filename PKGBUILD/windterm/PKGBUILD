@@ -1,0 +1,33 @@
+pkgname='windterm'
+pkgver='2.5.0'
+pkgrel=1
+pkgdesc='A quicker and better cross-platform SSH/Sftp/Shell/Telnet/Serial terminal.'
+arch=('x86_64')
+depends=()
+license=('Apache-2.0')
+url='https://github.com/kingToolbox/WindTerm/'
+provides=('windterm')
+source=("${pkgname}-${pkgver}-${arch}.tar.gz::https://github.com/kingToolbox/WindTerm/releases/download/${pkgver}/WindTerm_${pkgver}_Linux_Portable_x86_64.tar.gz"
+	"windterm"
+	"windterm.desktop")
+sha256sums=('bb56c9b855deaf4237b2a259a53e44a755cd0f5c45b9a806ea5eff91a8c092a5'
+	"82ffd6720b9b07e28e769f534d9531626fff9e1ed1052c28c03c98c3f450de09"
+	"0dba168148c32233fbf073d6a2e3f8958a33a3811bcd8a631d8cd1003b99505b")
+
+package (){
+	install -dm755 ${pkgdir}/opt
+	mv ${srcdir}/WindTerm_${pkgver} ${pkgdir}/opt/WindTerm
+
+	install -Dm755 ${srcdir}/windterm ${pkgdir}/usr/bin/windterm
+	install -Dm755 ${srcdir}/windterm.png ${pkgdir}/usr/share/icons/windterm.png
+	install -Dm755 ${srcdir}/windterm.desktop ${pkgdir}/usr/share/applications/windterm.desktop
+
+	# fix config
+	mkdir -p ${pkgdir}/opt/WindTerm/profiles/default.v10
+	touch ${pkgdir}/opt/WindTerm/profiles/default.v10/user.config
+	chmod -R 755 ${pkgdir}/opt/WindTerm
+	chmod -R 777 ${pkgdir}/opt/WindTerm/profiles/default.v10/user.config
+
+	# License
+	install -Dm644 ${pkgdir}/opt/WindTerm/license.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}

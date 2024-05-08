@@ -1,0 +1,29 @@
+pkgname=clash-for-windows
+pkgver=0.19.25
+pkgrel=1
+pkgdesc="A Windows/macOS/Linux GUI based on Clash."
+arch=("x86_64")
+url="https://github.com/Fndroid/clash_for_windows_pkg"
+install=clash-for-windows-bin.install
+depends=('libxss' 'gtk3')
+optdepends=(
+    'nftables: TUN mode required.'
+    'iproute2: TUN mode required.'
+)
+source=(
+    "${pkgname}-${pkgver}-x86_64-linux.tar.gz::${url}/releases/download/${pkgver}/Clash.for.Windows-${pkgver}-x64-linux.tar.gz"
+    "clash.png"
+    "clash-for-windows.desktop")
+sha256sums=('471a11987e36da46845ea017bb85762cd8cf18c53a9a3f4155208f68d8ac20c4'
+	'0d48a2ea1ee05ad4579b6e6996889548fa8a61a5ff6c85a32f7622cddfcb5782'
+    '7f6dcf6166caf26eed31a084c2784d19d598d2a034191d82f66499e8a5de4c05')
+
+package() {
+	cd "Clash for Windows-${pkgver}-x64-linux"
+	install -dm 755 ${pkgdir}/opt/clash-for-windows
+	cp -fr  ./* ${pkgdir}/opt/clash-for-windows/
+	install -dm 755 ${pkgdir}/usr/bin
+	ln -sf /opt/clash-for-windows/cfw ${pkgdir}/usr/bin/cfw
+    install -Dm 644 ${srcdir}/clash.png ${pkgdir}/usr/share/pixmaps/clash.png
+    install -Dm 644 ${srcdir}/clash-for-windows.desktop ${pkgdir}/usr/share/applications/clash-for-windows.desktop
+}

@@ -1,0 +1,21 @@
+# Maintainer: Cloudflying < oss@live.hk >
+
+pkgname=360sd
+pkgver=1.0.0.1014
+pkgrel=1
+pkgdesc="360 safe for linux"
+arch=('x86_64')
+url="https://yunpan.360.cn/"
+license=('custom')
+options=('!strip')
+depends=( 'curl' 'libbsd' 'qt5-base' 'openssl-1.0')
+source=("https://packages.deepin.com/deepin/pool/non-free/3/360sd/360sd_${pkgver}_amd64.deb")
+sha256sums=('856a4e29fa6bdfed833a4ebc65041f4d6c2888288d48e41aee8305e98ec9587f')
+
+package() {
+    tar -xf "${srcdir}/data.tar.xz" -C "${pkgdir}/"
+	mkdir -p ${pkgdir}/usr/bin
+	mv ${pkgdir}/bin/* ${pkgdir}/usr/bin/
+	rm -fr ${pkgdir}/bin
+	chmod 755 -R ${pkgdir}/usr/bin/*
+}

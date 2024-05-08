@@ -1,0 +1,25 @@
+pkgname=clash-premium
+pkgver=2022.08.26
+pkgrel=1
+pkgdesc="Close-sourced pre-built Clash binary with TUN support"
+provides=("clash")
+conflicts=("clash" "clash-bin" "clash-git" "clash-tun" "clash-dev-git" "clash-premium-git" "clash-premium-bin")
+arch=("x86_64")
+url="https://github.com/Dreamacro/clash/releases/tag/premium"
+license=("unknown")
+depends=("glibc")
+install=${pkgname}.install
+source=("clash@.service"
+        "clash_user.service"
+		"${pkgname}-x86_64-${pkgver}.gz::https://github.com/Dreamacro/clash/releases/download/premium/clash-linux-amd64-${pkgver}.gz")
+sha256sums=('c89bf45cd06bad44af7f8211bc069aa5643fc200a234a541c87b6d1ae61da5cf'
+	'369dfb67640e162e97fa7371916e1e7b9868e5d0d9237565d71da6b97fbfd09b'
+	'26618ff738a8bb3490148d64be933e7a399089b28ff1434f0d78663640425a2f'
+)
+
+package() {
+    cd ${srcdir}
+    install -Dm755 "${pkgname}-${CARCH}-${pkgver}" "${pkgdir}/usr/bin/clash"
+    install -Dm644 "clash@.service" "${pkgdir}/usr/lib/systemd/system/clash@.service"
+    install -Dm644 "clash_user.service" "${pkgdir}/usr/lib/systemd/user/clash.service"
+}

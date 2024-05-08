@@ -1,0 +1,21 @@
+pkgname=dxvk-nvapi
+pkgver=0.5.4
+pkgrel=1
+pkgdesc='Alternative NVAPI implementation on top of DXVK. '
+arch=('x86_64')
+url="https://github.com/jp7677/dxvk-nvapi"
+license=('MIT')
+depends=('vulkan-icd-loader' 'wine>=4.0rc1' 'lib32-vulkan-icd-loader' 'dxvk' 'bash')
+options=(!lto)
+source=(
+    "https://github.com/jp7677/dxvk-nvapi/releases/download/v0.5.4/dxvk-nvapi-v0.5.4.tar.gz"
+    "setup_dxvk_nvapi.sh"
+)
+sha256sums=('fd90d57766cc718503d5dd8b9a19218fc47b2c1d4a46ac0b070718eea1394cca'
+            '62a14512ab32ff534d8b07f2cdefae17ee679c73465edeb11bfac1e88f0a7109')
+
+package() {
+	install -Dm755 ${srcdir}/x32/* -t "${pkgdir}/usr/share/${pkgname}/x32"
+	install -Dm755 ${srcdir}/x64/* -t "${pkgdir}/usr/share/${pkgname}/x64"
+	install -Dm755 "$srcdir"/setup_dxvk_nvapi.sh "$pkgdir/usr/bin/setup_${pkgname}"
+}
