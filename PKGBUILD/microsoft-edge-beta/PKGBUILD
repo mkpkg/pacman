@@ -1,0 +1,67 @@
+pkgname=microsoft-edge-beta
+_pkgname=microsoft-edge-beta
+_pkgshortname=msedge-beta
+pkgver=104.0.1293.35
+pkgrel=1
+pkgdesc="A browser that combines a minimal design with sophisticated technology to make the web faster, safer, and easier"
+arch=('x86_64')
+url="https://www.microsoftedgeinsider.com/en-us/download"
+license=('custom')
+provides=('microsoft-edge-beta' 'edge-beta')
+conflicts=('microsoft-edge-beta-bin' 'edge-beta' 'edge-beta-bin' 'edge')
+depends=('gtk3' 'libcups' 'nss' 'alsa-lib' 'libxtst' 'libdrm' 'mesa')
+makedepends=('imagemagick')
+optdepends=('libpipewire02: WebRTC desktop sharing under Wayland'
+            'kdialog: for file dialogs in KDE'
+            'gnome-keyring: for storing passwords in GNOME keyring'
+            'kwallet: for storing passwords in KWallet'
+            'libunity: for download progress on KDE'
+            'ttf-liberation: fix fonts for some PDFs - CRBug #369991'
+            'xdg-utils')
+options=(!strip !zipman)
+_channel=beta
+source=("https://packages.microsoft.com/repos/edge/pool/main/m/${pkgname}/${_pkgname}_${pkgver}-1_amd64.deb"
+        "${pkgname}.sh"
+        "Microsoft Standard Application License Terms - Standalone (free) Use Terms.pdf")
+sha256sums=('607ac0d18bb112fd189b1d644d4f1347ec70288258c67f008c087e0061d0d118'
+            'ccb0d8939af2f129da97f75ef063b6ff2d9484e94c090aef82570001eba8dd71'
+            'edf2ed596eb068f168287fc76aa713ad5e0afb59f0a0a47a4f29c0c124ade15e')
+
+package() {
+	bsdtar -xf data.tar.xz
+	install -dm755 ${pkgdir}/{usr/bin,opt}
+	cp -fr ${srcdir}/usr/share ${pkgdir}/usr/share
+	cp -fr ${srcdir}/opt/* ${pkgdir}/opt/
+
+	# 256 and 24 are proper colored icons
+	for res in 128 64 48 32; do
+		convert "${pkgdir}/opt/microsoft/${_pkgshortname}/product_logo_256_beta.png" \
+			-resize ${res}x${res} \
+			"${pkgdir}/opt/microsoft/${_pkgshortname}/product_logo_${res}_beta.png"
+	done
+
+	for res in 22 16; do
+		convert "${pkgdir}/opt/microsoft/${_pkgshortname}/product_logo_24_beta.png" \
+			-resize ${res}x${res} \
+			"${pkgdir}/opt/microsoft/${_pkgshortname}/product_logo_${res}_beta.png"
+	done
+
+	# install icons
+	for res in 16 22 24 32 48 64 128 256; do
+		install -Dm644 "${pkgdir}/opt/microsoft/${_pkgshortname}/product_logo_${res}_beta.png" \
+			"${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps/${_pkgname}.png"
+	done
+
+	install -Dm644 ${pkgdir}/opt/microsoft/${_pkgshortname}/product_logo_256_beta.png $pkgdir/usr/share/pixmaps/$_pkgname.png
+	install -Dm644 ${pkgdir}/opt/microsoft/${_pkgshortname}/product_logo_32_beta.xpm $pkgdir/usr/share/pixmaps/${_pkgname}_32x32.xpm
+
+	# User flag aware launcher
+    install -m755 ${srcdir}/${pkgname}.sh "${pkgdir}/usr/bin/${pkgname}"
+
+	# License
+	install -Dm644 ${srcdir}/'Microsoft Standard Application License Terms - Standalone (free) Use Terms.pdf' "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE.pdf"
+
+	rm -fr ${pkgdir}/opt/microsoft/${_pkgshortname}/cron/
+	rm -fr ${pkgdir}/opt/microsoft/${_pkgshortname}/*.png
+	rm -fr ${pkgdir}/opt/microsoft/${_pkgshortname}/*.xpm
+}

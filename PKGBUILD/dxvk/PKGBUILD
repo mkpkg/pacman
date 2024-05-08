@@ -1,0 +1,24 @@
+pkgbase=dxvk
+pkgname=('dxvk')
+pkgver=1.10.2
+pkgrel=1
+pkgdesc="Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine)"
+url="https://github.com/doitsujin/dxvk"
+license=('zlib/libpng')
+arch=('x86_64')
+provides=("dxvk" "d9vk" "dxvk=$pkgver")
+conflicts=("dxvk" "d9vk")
+depends=('vulkan-icd-loader')
+options=(!strip)
+optdepends=('lib32-vulkan-icd-loader: 32-bit Windows application support')
+source=("https://github.com/doitsujin/dxvk/releases/download/v$pkgver/dxvk-$pkgver.tar.gz"
+)
+sha256sums=('bf97df2b8923cd8e6c646bd66bdb3d0894da1be05a6498c2dbc15b4d2e530c83')
+
+package() {
+	install -D "dxvk-$pkgver"/x32/* -t "$pkgdir/usr/share/dxvk/x32"
+    install -D "dxvk-$pkgver"/x64/* -t "$pkgdir/usr/share/dxvk/x64"
+    install "dxvk-$pkgver"/setup_dxvk.sh -t "$pkgdir/usr/share/dxvk/"
+    install -d "$pkgdir/usr/bin"
+    ln -s /usr/share/dxvk/setup_dxvk.sh "$pkgdir/usr/bin/setup_dxvk"
+}

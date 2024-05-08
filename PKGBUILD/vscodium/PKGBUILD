@@ -1,0 +1,54 @@
+pkgname=vscodium
+_pkgname=VSCodium
+pkgver=1.71.2.22258
+pkgrel=1
+pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
+arch=('x86_64' 'aarch64')
+url="https://github.com/VSCodium/vscodium"
+license=('MIT')
+depends=(
+	fontconfig libxtst gtk3 python cairo alsa-lib nss gcc-libs libnotify libxss
+	'glibc>=2.28-4'
+)
+optdepends=(
+	'gvfs: For move to trash functionality'
+	'libdbusmenu-glib: For KDE global menu'
+)
+provides=('vscode' 'codium' 'vscodium')
+conflicts=('vscodium-bin' 'vscodium-git')
+
+sha256sums=(
+	'4e7027a1965594c96faeb82872608ea5fb09291838ff70b3db3ec5b9eff89262'
+	'c38960a807acbcb90b32c72b658db6a57910192fdcbe736307115b4d4d2e1fb0'
+)
+sha256sums_x86_64=('5b6d3ad55e8e3f798618645888f506469af3a5824ed8c69bb72c6f1cc3d054aa')
+sha256sums_aarch64=('8601e248d93886fb03c76c11b29eb223ff6d9c07d41fea0be515a6a38b40cf18')
+source=("${pkgname}.desktop"
+	"${pkgname}-uri-handler.desktop")
+source_x86_64=("https://github.com/VSCodium/vscodium/releases/download/${pkgver}/${_pkgname}-linux-x64-${pkgver}.tar.gz")
+source_aarch64=("https://github.com/VSCodium/vscodium/releases/download/${pkgver}/${_pkgname}-linux-arm64-${pkgver}.tar.gz")
+
+shopt -s extglob
+
+package() {
+	install -d -m755 ${pkgdir}/opt/${pkgname}
+	install -d -m755 ${pkgdir}/usr/bin
+	install -d -m755 ${pkgdir}/usr/share/{applications,pixmaps}
+
+	#   cp -r ${srcdir}/!(vscodium-bin?(-uri-handler).desktop|${_pkgname}-linux-@(x|arm)64-${pkgver}.tar.gz) ${pkgdir}/opt/${pkgname}
+	cp -fr ${srcdir}/* ${pkgdir}/opt/${pkgname}
+	rm -fr ${pkgdir}/opt/${pkgname}/*.{desktop,gz}
+
+	ln -s /opt/${pkgname}/bin/codium ${pkgdir}/usr/bin/codium
+	ln -s /opt/${pkgname}/bin/codium ${pkgdir}/usr/bin/vscodium
+	install -D -m644 ${srcdir}/${pkgname}.desktop ${pkgdir}/usr/share/applications/codium.desktop
+	install -D -m644 ${srcdir}/${pkgname}-uri-handler.desktop ${pkgdir}/usr/share/applications/codium-uri-handler.desktop
+	install -D -m644 ${srcdir}/resources/app/resources/linux/code.png \
+		${pkgdir}/usr/share/pixmaps/vscodium.png
+
+	# Symlink shell completions
+	install -d -m755 ${pkgdir}/usr/share/zsh/site-functions
+	install -d -m755 ${pkgdir}/usr/share/bash-completion/completions
+	ln -s /opt/${pkgname}/resources/completions/zsh/_codium ${pkgdir}/usr/share/zsh/site-functions
+	ln -s /opt/${pkgname}/resources/completions/bash/codium ${pkgdir}/usr/share/bash-completion/completions
+}

@@ -1,0 +1,29 @@
+# Maintainer: Cloudflying < oss@live.hk >
+
+pkgname=360zip
+pkgver=1.0.0.1010
+pkgrel=4
+pkgdesc="360 Archiving Tool"
+arch=('x86_64')
+url="http://yasuo.360.cn/"
+license=('custom')
+depends=('qt5-base')
+source=("https://packages.deepin.com/deepin/pool/non-free/3/360zip/360zip_${pkgver}_amd64.deb")
+sha256sums=('0a366ca020870a4cefa8a014a2bdb5c677935a56f3d4e50829808650e71ac648')
+
+package() {
+    tar -xf "$srcdir/data.tar.xz" -C "$pkgdir/"
+
+    mkdir -p "$pkgdir/usr/share"
+    mv "$pkgdir/usr/local/share/360zip" "$pkgdir/usr/share/360zip"
+    mv "$pkgdir/usr/local/share/applications" "$pkgdir/usr/share/applications"
+
+    mkdir -p "$pkgdir/usr/share/icons"
+    ln -s "$pkgdir/usr/local/share/360zip.png" "$pkgdir/usr/share/icons/360zip.png"
+
+    mv "$pkgdir/usr/lib/x86_64-linux-gnu/dde-file-manager" "$pkgdir/usr/lib/dde-file-manager"
+    rmdir "$pkgdir/usr/lib/x86_64-linux-gnu"
+
+    mkdir -p "$pkgdir/usr/bin"
+    ln -s /usr/share/360zip/360zip.sh "$pkgdir/usr/bin/360zip"
+}

@@ -1,0 +1,18 @@
+# Maintainer: Cloudflying < oss@live.hk >
+
+pkgname=360safe
+pkgver=3.0.0.66
+pkgrel=1
+pkgdesc="360 safe for linux"
+arch=('x86_64')
+url="https://yunpan.360.cn/"
+license=('custom')
+options=('!strip')
+depends=( 'curl' 'libbsd' 'qt5-base' 'openssl-1.0')
+source=("https://packages.deepin.com/deepin/pool/non-free/3/360safeforlinux/360safeforlinux_${pkgver}_amd64.deb")
+sha256sums=('17c2724b4d939deb7aa26754869ce96822656161608d91cc8d4cc92574c2ace8')
+
+package() {
+    tar -xf "${srcdir}/data.tar.xz" -C "${pkgdir}/"
+    ln -sf "/opt/${pkgname}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+}

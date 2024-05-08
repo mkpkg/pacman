@@ -1,0 +1,37 @@
+_extname=swoole
+pkgname=php74-$_extname
+_basename=php74
+pkgver=4.8.12
+pkgrel=1
+pkgdesc="Coroutine-based concurrency library for PHP"
+arch=('x86_64')
+url="https://github.com/swoole/swoole-src"
+license=('Apache')
+depends=('php7')
+makedepends=('gcc' 'make')
+
+source=("https://github.com/swoole/swoole-src/archive/refs/tags/v$pkgver.tar.gz"
+        "$_extname.ini")
+sha256sums=('ac0f5b3cb9ef2e04f0325fd4d2048bc727d545c56ae9d7525c9150b33ae55b7c'
+            'd6136baa465914927d20fb154e5384146c11de659cee190860a031520e894078')
+
+build() {
+    cd $_extname-src-$pkgver
+    phpize7
+    ./configure --prefix= --enable-swoole-curl --enable-http2 --enable-openssl
+    make
+}
+
+package() {
+    mkdir -p "$pkgdir"/etc/${_basename}/conf.d \
+        "$pkgdir"/usr/include/${_basename}/ext \
+        "$pkgdir"/usr/lib/${_basename}/modules \
+        "$pkgdir"/usr/share/licenses/$pkgname
+
+    cp $_extname.ini "$pkgdir"/etc/${_basename}/conf.d/
+
+    cd $_extname-src-$pkgver
+    cp -a include "$pkgdir"/usr/include/${_basename}/ext/$_extname
+    mv .libs/$_extname.so "$pkgdir"/usr/lib/${_basename}/modules/
+    cp LICENSE "$pkgdir"/usr/share/licenses/$pkgname/
+}
