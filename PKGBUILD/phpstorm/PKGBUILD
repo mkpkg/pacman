@@ -1,0 +1,46 @@
+pkgbase=phpstorm
+pkgname=(phpstorm phpstorm-jre)
+pkgver=2024.1.2
+pkgrel=1
+pkgdesc='Lightweight and Smart PHP IDE'
+arch=('x86_64' 'i686')
+license=('custom:jetbrains')
+url='https://www.jetbrains.com/phpstorm/'
+depends=('glib2' 'python')
+options=('!strip')
+source=("https://mirrors.xie.ke/mkpkg/software/jetbrains/PhpStorm-${pkgver%b*}.tar.gz"
+        jetbrains-phpstorm.desktop
+        LICENSE)
+sha256sums=('d7500a11166dd59744e27a939bd92702e26b5388341d15a5235d7eb721835b83'
+        '42f9f0f22019c4445397a5afd49d6e899d7fdd5200a03eaf2f6179f85fb620c4'
+        'c37db68dbedb20617a23cf1299cd95e7f114f019ff7f44877409cef916ff6ab1')
+
+package_phpstorm() {
+  optdepends=('phpstorm-jre: JetBrains custom Java Runtime (Recommended)'
+              'java-runtime: JRE - Required if phpstorm-jre is not installed'
+              'gnome-keyring: save login/deployment credentials safely'
+              'java-openjfx: rendering Markdown files')
+  _buildver="$(ls | grep -Eo 'PhpStorm-[[:digit:]]+\.[[:digit:]]{2,5}\.[[:digit:]]+' | sort -r | head -1 | sed 's#PhpStorm-##')"
+
+  install -dm755 "${pkgdir}"/opt/
+  install -dm755 "${pkgdir}"/usr/bin/
+  install -dm755 "${pkgdir}"/usr/share/applications/
+  install -dm755 "${pkgdir}"/usr/share/pixmaps/
+
+  cp -a "${srcdir}"/PhpStorm-${_buildver:?_buildver unset}/ "${pkgdir}"/opt/${pkgbase}
+  rm -rf "${pkgdir}"/opt/${pkgbase}/jbr
+
+  ln -s /opt/${pkgbase}/bin/${pkgbase}.sh "${pkgdir}"/usr/bin/${pkgbase}
+  install -D -m 644 "${srcdir}"/jetbrains-${pkgbase}.desktop "${pkgdir}"/usr/share/applications/
+  install -D -m 644 "${pkgdir}"/opt/${pkgbase}/bin/${pkgbase}.svg "${pkgdir}"/usr/share/pixmaps/${pkgbase}.svg
+  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE.txt
+}
+
+package_phpstorm-jre() {
+  pkgdesc='JBR (JetBrains Runtime) for PhpStorm - a patched JRE'
+  url='https://github.com/JetBrains/JetBrainsRuntime'
+  _buildver="$(ls | grep -Eo 'PhpStorm-[[:digit:]]+\.[[:digit:]]{2,5}\.[[:digit:]]+' | sort -r | head -1 | sed 's#PhpStorm-##')"
+
+  install -d -m 755 "${pkgdir}"/opt/${pkgbase}
+  cp -a "${srcdir}"/PhpStorm-${_buildver:?_buildver unset}/jbr "${pkgdir}"/opt/${pkgbase}
+}

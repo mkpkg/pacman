@@ -1,19 +1,20 @@
 pkgname=android-studio
-pkgver=2021.2.1.15
+pkgver=2023.3.1.19
 pkgrel=1
-pkgdesc="The official Android IDE"
+pkgdesc="The official Android IDE (Stable branch)"
 arch=('x86_64')
 url="https://developer.android.com"
 license=('Apache')
-depends=('alsa-lib' 'freetype2' 'libxrender' 'libxtst')
+depends=('alsa-lib' 'freetype2' 'libxrender' 'libxtst' 'which')
 optdepends=('gtk2: GTK+ look and feel'
             'libgl: emulator support'
             'ncurses5-compat-libs: native debugger support')
 options=('!strip')
-source=("https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-$pkgver-linux.tar.gz"
+# "https://dl.google.com/dl/android/studio/ide-zips/$pkgver/android-studio-$pkgver-linux.tar.gz"
+source=("https://mirrors.xie.ke/mkpkg/software/dev/$pkgver/android-studio-$pkgver-linux.tar.gz"
         "$pkgname.desktop"
         "license.html")
-sha256sums=('0018e0dfc0dd2921700516f7a2c443377c557788da7fb0a45243ecb4300745be'
+sha256sums=('172b1c24fbac98adf750f21ec55db41974386795fc99f35114fbbfd977a0e6db'
             '73cd2dde1d0f99aaba5baad1e2b91c834edd5db3c817f6fb78868d102360d3c4'
             '9a7563f7fb88c9a83df6cee9731660dc73a039ab594747e9e774916275b2e23e')
 
