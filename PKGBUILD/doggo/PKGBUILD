@@ -1,5 +1,5 @@
 pkgname=doggo
-pkgver=0.5.4
+pkgver=0.5.7
 pkgrel=1
 pkgdesc='Command-line DNS Client for Humans.'
 arch=('x86_64')
@@ -8,12 +8,12 @@ license=('GPL')
 source=("https://github.com/mr-karan/doggo/releases/download/v${pkgver}/doggo_${pkgver}_linux_amd64.tar.gz")
 conflicts=('doggo-git' 'doggo-bin')
 provides=('doggo')
-sha256sums=('b85768a4f994ad3b4af0ec905e4a26b0a0d774c20f99cb36115fcb5d9c9dd61f')
+sha256sums=('1c04d2563af449b8db791829535fe716db4732094b8fd169064c1f81e83fa9ab')
 
 package() {
-	install -Dm755 "$pkgname" "$pkgdir"/usr/bin/"$pkgname"
-	install -Dm644 README.md "$pkgdir"/usr/share/doc/"$pkgname"/README.md
-	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-  	install -Dm644 completions/"${pkgname}.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
-	install -Dm644 completions/"${pkgname}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
+  install -Dm755 "$pkgname" "$pkgdir"/usr/bin/"$pkgname"
+  install -Dm644 README.md "$pkgdir"/usr/share/doc/"$pkgname"/README.md
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 completions/"${pkgname}.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
+  install -Dm644 completions/"${pkgname}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
 }
