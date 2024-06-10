@@ -1,1 +1,14 @@
 .DS_Store
+
+src
+pkg
+*.deb
+*.rpm
+*.log
+*.pkg.*
+*.zip
+*.tar
+*.deb
+*.gz
+*.xz
+*.zst

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.1
+Type=Application
+Name=PyCharm Community
+Icon=pycharm-community
+Exec=/opt/pycharm-community-eap/bin/pycharm %f
+Comment=Powerful Python and Django IDE Community Edition
+Categories=Development;IDE;
+Terminal=false
+StartupWMClass=jetbrains-pycharm-ce
+StartupNotify=true
