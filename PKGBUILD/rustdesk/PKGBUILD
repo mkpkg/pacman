@@ -1,5 +1,5 @@
 pkgname=rustdesk
-pkgver=1.1.9
+pkgver=1.2.3
 pkgrel=2
 pkgdesc="Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!"
 arch=('x86_64')
@@ -8,7 +8,7 @@ license=('AGPLv3')
 provides=(${pkgname})
 conflicts=(${pkgname}-git ${pkgname}-bin)
 depends=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'pulseaudio')
-source=("https://github.com/rustdesk/rustdesk/releases/download/${pkgver}/rustdesk-${pkgver}-manjaro-arch.pkg.tar.zst"
+source=("https://github.com/rustdesk/rustdesk/releases/download/${pkgver}-${pkgrel}/rustdesk-${pkgver}-${pkgrel}-x86_64.pkg.tar.zst"
 	"LICENSE"
 	"rustdesk.png"
 )

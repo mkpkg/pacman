@@ -12,3 +12,7 @@ pkg
 *.gz
 *.xz
 *.zst
+*.AppImage
+*.tar.*
+*.zip
+*.rar

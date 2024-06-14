@@ -1,12 +1,3 @@
-# Maintainer: mickael9 <mickael9 at gmail.com>
-# Contributor: Pierre Schmitz <pierre@archlinux.de>
-# Contributor: Thore Bödecker <me@foxxx0.de>
-# Contributor: Jörg Schuck <joerg_schuck [at] web.de>
-#
-# Changes from 2016-01-10, by Thore Bödecker:
-#   reworked everything to allow php56 to co-exist with upstream php packages
-
-
 pkgbase=php56
 _pkgbase="${pkgbase%56}"
 pkgname=("${pkgbase}"
