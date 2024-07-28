@@ -1,0 +1,17 @@
+deb2appimage
+lib32-rtmpdump
+lib32-libnuma
+lib32-l-smash
+lib32-x264
+lib32-x265
+lua-messagepack
+debianutils
+python-aioopenssl
+python-pyptt
+python-uao
+python-pypdf2
+python-whisper
+teamviewer
+vmware-keymaps
+wps-office
+wps-office-cn
