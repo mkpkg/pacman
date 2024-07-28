@@ -2,6 +2,7 @@
 
 src
 pkg
+*.exe
 *.deb
 *.rpm
 *.log
@@ -9,10 +10,11 @@ pkg
 *.zip
 *.tar
 *.deb
+*.AppImage
+
 *.gz
 *.xz
 *.zst
-*.AppImage
 *.tar.*
 *.zip
 *.rar

@@ -1,6 +1,6 @@
 pkgname=rustdesk
-pkgver=1.2.3
-pkgrel=2
+pkgver=1.2.7
+pkgrel=0
 pkgdesc="Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!"
 arch=('x86_64')
 url="https://github.com/rustdesk/rustdesk"
@@ -8,23 +8,30 @@ license=('AGPLv3')
 provides=(${pkgname})
 conflicts=(${pkgname}-git ${pkgname}-bin)
 depends=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'pulseaudio')
-source=("https://github.com/rustdesk/rustdesk/releases/download/${pkgver}-${pkgrel}/rustdesk-${pkgver}-${pkgrel}-x86_64.pkg.tar.zst"
-	"LICENSE"
-	"rustdesk.png"
+source=(
+  "rustdesk-x86_64.pkg.tar.zst::https://github.com/rustdesk/rustdesk/releases/download/${pkgver}/rustdesk-${pkgver}-${pkgrel}-x86_64.pkg.tar.zst"
+  "LICENSE"
+  "rustdesk.png"
 )
-sha256sums=("d6b2297a6a353abe516b6bb46b76bd854ed90171e37062d51b5f53485926a5ca"
-	"8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
-	"7810e5a0b472a9923362c293803c04084754823dcc665578415f693012ca3e77"
+sha256sums=(
+  "4e4415e909191c93f18294d20d2777ceec3af47e2847a67448badc5a529242d4"
+  "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
+  "7810e5a0b472a9923362c293803c04084754823dcc665578415f693012ca3e77"
 )
 
 package() {
-    install -Dm0755 "${srcdir}/usr/bin/rustdesk" "${pkgdir}/usr/bin/${pkgname}"
-    install -Dm0755 "${srcdir}/usr/lib/rustdesk/libsciter-gtk.so" "${pkgdir}/usr/lib/rustdesk/libsciter-gtk.so"
-    install -Dm0644 "${srcdir}/rustdesk.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
-    install -Dm0644 "${srcdir}/usr/share/rustdesk/files/rustdesk.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+  mkdir -p "$pkgdir/usr/bin/"
+  ln -s "/usr/lib/rustdesk/rustdesk" "$pkgdir/usr/bin/rustdesk"
 
-	sed -i "s#Icon=.*#Icon=/usr/share/pixmaps/rustdesk.png#g" ${srcdir}/usr/share/rustdesk/files/rustdesk.desktop
-    install -Dm0644 "${srcdir}/usr/share/rustdesk/files/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  mkdir -p "$pkgdir/usr/lib/"
+  cp -r "$srcdir/usr/lib/rustdesk/" "$pkgdir/usr/lib/"
 
-    install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  sed -i "s#Icon=.*#Icon=/usr/share/pixmaps/rustdesk.png#g" ${srcdir}/usr/share/rustdesk/files/rustdesk.desktop
+
+  install -Dm644 "$srcdir/usr/share/icons/hicolor/256x256/apps/rustdesk.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/rustdesk.png"
+  install -Dm644 "$srcdir/usr/share/icons/hicolor/scalable/apps/rustdesk.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/rustdesk.svg"
+  install -Dm644 "$srcdir/usr/share/rustdesk/files/rustdesk.desktop" "$pkgdir/usr/share/applications/rustdesk.desktop"
+  install -Dm644 "$srcdir/usr/share/rustdesk/files/rustdesk-link.desktop" "$pkgdir/usr/share/applications/rustdesk-link.desktop"
+  install -Dm644 "$srcdir/usr/share/rustdesk/files/rustdesk.service" "$pkgdir/usr/lib/systemd/system/rustdesk.service"
+  install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
