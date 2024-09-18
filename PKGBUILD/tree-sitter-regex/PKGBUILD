@@ -1,0 +1,40 @@
+pkgname=tree-sitter-regex
+pkgver=0.23.0
+pkgrel=1
+pkgdesc='Regex grammar for tree-sitter'
+arch=(x86_64)
+url=https://github.com/tree-sitter/tree-sitter-regex/
+license=(MIT)
+groups=(tree-sitter-grammars)
+makedepends=(
+  git
+  tree-sitter-cli
+)
+optdepends=('tree-sitter: core library')
+provides=("lib$pkgname.so")
+source=("${url}archive/refs/tags/v${pkgver}.zip")
+sha256sums=('6e264c872e569b7697fda93af8c45cd47825e75e80926ff1a1758194e0254218')
+
+prepare()
+{
+  cd $pkgname-${pkgver}
+  tree-sitter generate --no-bindings src/grammar.json
+}
+
+build()
+{
+  cd $pkgname-${pkgver}
+  make PREFIX=/usr PARSER_URL=$url
+}
+
+package()
+{
+  install -d "$pkgdir"/usr/lib/tree_sitter
+  ln -s /usr/lib/lib$pkgname.so \
+    "$pkgdir"/usr/lib/tree_sitter/${pkgname#tree-sitter-}.so
+
+  cd $pkgname-${pkgver}
+  make DESTDIR="$pkgdir" PREFIX=/usr install
+  install -Dm644 -t "$pkgdir"/usr/share/doc/$pkgname README.md
+  install -Dm644 -t "$pkgdir"/usr/share/licenses/$pkgname LICENSE
+}

@@ -1,0 +1,40 @@
+pkgname=tree-sitter-java
+pkgver=0.23.2
+pkgrel=1
+pkgdesc='Java grammar for tree-sitter'
+arch=(x86_64)
+url=https://github.com/tree-sitter/tree-sitter-java/
+license=(MIT)
+groups=(tree-sitter-grammars)
+makedepends=(
+  git
+  tree-sitter-cli
+)
+optdepends=('tree-sitter: core library')
+provides=("lib$pkgname.so")
+source=("${url}archive/refs/tags/v${pkgver}.zip")
+sha256sums=('a975f0eabe7e3032a9714d16086229856d482ca007a61af4634f9f1ea35ba714')
+
+prepare()
+{
+  cd $pkgname-${pkgver}
+  tree-sitter generate --no-bindings src/grammar.json
+}
+
+build()
+{
+  cd $pkgname-${pkgver}
+  make PREFIX=/usr PARSER_URL=$url
+}
+
+package()
+{
+  install -d "$pkgdir"/usr/lib/tree_sitter
+  ln -s /usr/lib/lib$pkgname.so \
+    "$pkgdir"/usr/lib/tree_sitter/${pkgname#tree-sitter-}.so
+
+  cd $pkgname-${pkgver}
+  make DESTDIR="$pkgdir" PREFIX=/usr install
+  install -Dm644 -t "$pkgdir"/usr/share/doc/$pkgname README.md
+  install -Dm644 -t "$pkgdir"/usr/share/licenses/$pkgname LICENSE
+}

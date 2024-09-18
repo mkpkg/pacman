@@ -1,0 +1,40 @@
+pkgname=tree-sitter-json
+pkgver=0.23.0
+pkgrel=1
+pkgdesc='Json grammar for tree-sitter'
+arch=(x86_64)
+url=https://github.com/tree-sitter/tree-sitter-json/
+license=(MIT)
+groups=(tree-sitter-grammars)
+makedepends=(
+  git
+  tree-sitter-cli
+)
+optdepends=('tree-sitter: core library')
+provides=("lib$pkgname.so")
+source=("${url}/archive/refs/tags/v${pkgver}.zip")
+sha256sums=('f719e0222611bd974e05f9894e561125cc42cc8857bf17e51d5a1a3c2c7e20ea')
+
+prepare()
+{
+  cd $pkgname-${pkgver}
+  tree-sitter generate --no-bindings src/grammar.json
+}
+
+build()
+{
+  cd $pkgname-${pkgver}
+  make PREFIX=/usr PARSER_URL=$url
+}
+
+package()
+{
+  install -d "$pkgdir"/usr/lib/tree_sitter
+  ln -s /usr/lib/lib$pkgname.so \
+    "$pkgdir"/usr/lib/tree_sitter/${pkgname#tree-sitter-}.so
+
+  cd $pkgname-${pkgver}
+  make DESTDIR="$pkgdir" PREFIX=/usr install
+  install -Dm644 -t "$pkgdir"/usr/share/doc/$pkgname README.md
+  install -Dm644 -t "$pkgdir"/usr/share/licenses/$pkgname LICENSE
+}
