@@ -1,5 +1,5 @@
 pkgname=rustdesk
-pkgver=1.2.7
+pkgver=1.3.0
 pkgrel=0
 pkgdesc="Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!"
 arch=('x86_64')
@@ -14,12 +14,13 @@ source=(
   "rustdesk.png"
 )
 sha256sums=(
-  "4e4415e909191c93f18294d20d2777ceec3af47e2847a67448badc5a529242d4"
+  "4b87ab3261d16ba0394e437fa867d102484c38975a213cfed1d028fe7b0fa51e"
   "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
   "7810e5a0b472a9923362c293803c04084754823dcc665578415f693012ca3e77"
 )
 
-package() {
+package()
+{
   mkdir -p "$pkgdir/usr/bin/"
   ln -s "/usr/lib/rustdesk/rustdesk" "$pkgdir/usr/bin/rustdesk"
 

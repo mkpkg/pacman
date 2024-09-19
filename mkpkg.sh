@@ -2,7 +2,7 @@
 ###
 # @Author: Cloudflying
 # @Date: 2022-06-23 13:19:21
-# @LastEditTime: 2024-09-18 15:03:09
+# @LastEditTime: 2024-09-19 14:46:26
 # @LastEditors: Cloudflying
 # @Description: 构建 AUR 包
 ###
@@ -26,6 +26,14 @@ export MAKEFLAGS="-j $(nproc)"
 export PACKAGER="Cloud Flying <oss@live.hk>"
 
 [ -z "$(id -u builders 2>&1 >/dev/null | grep user)" ] && useradd -s /bin/nologin ${BUILD_USER}
+
+# 获取 AUR 包仓库
+fetch_aur()
+{
+  if [[ ! -d ${BUILD_DIR}/${name} ]]; then
+    git clone --depth=1 "https://aur.archlinux.org/${name}.git" ${BUILD_DIR}/${name}
+  fi
+}
 
 # 构建指定包 优先从本地查找 否则从 aur clone 仓库直接构建
 _build()
@@ -73,14 +81,6 @@ build_aur_all()
   done
 }
 
-# 获取 AUR 包仓库
-fetch_aur()
-{
-  if [[ ! -d ${BUILD_DIR}/${name} ]]; then
-    git clone --depth=1 "https://aur.archlinux.org/${name}.git" ${BUILD_DIR}/${name}
-  fi
-}
-
 # 生成 repo 数据库
 _gen_repo()
 {
@@ -88,6 +88,23 @@ _gen_repo()
   repo-add --new --remove boxs.db.tar.gz "*.tar.zst"
 }
 
+__init()
+{
+  git config --global init.defaultBranch master
+  git config --global user.name imxieke
+  git config --global user.email "oss@live.hk"
+  sudo mkdir -p /tmp/build
+  sudo chmod 777 -R /tmp/build
+  sudo chmod 777 -R /data/repo
+  sudo chmod 777 /etc/pacman.d/mirrorlist
+  echo "Server = https://mirrors.ustc.edu.cn/archlinux/\$repo/os/\$arch" | sudo tee /etc/pacman.d/mirrorlist
+
+  if [[ -z "$(grep mkpkg /etc/pacman.conf)" ]]; then
+    echo "[mkpkg]" | sudo tee -a /etc/pacman.conf
+    echo "SigLevel = Optional" | sudo tee -a /etc/pacman.conf
+    echo "Server = https://mirrors.xieke.org/mkpkg/pacman/" | sudo tee -a /etc/pacman.conf
+  fi
+}
 _usage()
 {
   echo "mkpkg.sh build pkgname"
@@ -99,6 +116,9 @@ case "$1" in
     ;;
   gendb)
     _gen_repo
+    ;;
+  init)
+    __init
     ;;
   *)
     _usage
