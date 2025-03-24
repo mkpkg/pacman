@@ -1,3 +1,6 @@
+google-chrome
+google-chrome-beta
+google-chrome-dev
 deb2appimage
 lib32-rtmpdump
 lib32-libnuma
