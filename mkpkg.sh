@@ -2,7 +2,7 @@
 ###
 # @Author: Cloudflying
 # @Date: 2022-06-23 13:19:21
- # @LastEditTime: 2025-03-24 11:06:54
+ # @LastEditTime: 2025-03-24 11:41:35
  # @LastEditors: Cloudflying
 # @Description: 构建 AUR 包
 ###
@@ -12,8 +12,12 @@ PKGBUILD_PATH="${ROOT_DIR}/PKGBUILD"
 BUILD_USER='builder'
 BUILD_DIR="/tmp/build"
 mkdir -p ${BUILD_DIR}
-REPO_PATH=${ROOT_DIR}/repo
+REPO_PATH=/repo
 mkdir -p ${REPO_PATH}
+
+git config --global init.defaultBranch main
+git config --global user.name "imxieke"
+git config --global user.email "oss@live.hk"
 
 # Define AUR makepkg.conf
 DLAGENTS=('file::/usr/bin/curl -qgC - -o %o %u'
