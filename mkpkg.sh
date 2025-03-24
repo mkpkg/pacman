@@ -2,8 +2,8 @@
 ###
 # @Author: Cloudflying
 # @Date: 2022-06-23 13:19:21
-# @LastEditTime: 2024-09-19 14:46:26
-# @LastEditors: Cloudflying
+ # @LastEditTime: 2025-03-24 11:06:54
+ # @LastEditors: Cloudflying
 # @Description: 构建 AUR 包
 ###
 
@@ -85,7 +85,7 @@ build_aur_all()
 _gen_repo()
 {
   cd "${ROOT_DIR}/repo/pacman" || exit 1
-  repo-add --new --remove boxs.db.tar.gz "*.tar.zst"
+  repo-add --new --remove mkpkg.db.tar.gz "*.tar.zst"
 }
 
 __init()
@@ -105,6 +105,7 @@ __init()
     echo "Server = https://mirrors.xieke.org/mkpkg/pacman/" | sudo tee -a /etc/pacman.conf
   fi
 }
+
 _usage()
 {
   echo "mkpkg.sh build pkgname"
