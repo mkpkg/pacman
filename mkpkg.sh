@@ -12,7 +12,7 @@ PKGBUILD_PATH="${ROOT_DIR}/PKGBUILD"
 BUILD_USER='builder'
 BUILD_DIR="/tmp/build"
 mkdir -p ${BUILD_DIR}
-REPO_PATH=/repo
+REPO_PATH=${ROOT_DIR}/repo
 mkdir -p ${REPO_PATH}
 
 git config --global init.defaultBranch main

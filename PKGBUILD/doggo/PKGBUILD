@@ -1,7 +1,7 @@
 pkgname=doggo
-pkgver=1.0.4
+pkgver=1.1.2
 pkgrel=1
-pkgdesc='Command-line DNS Client for Humans.'
+pkgdesc='🐶 Command-line DNS Client for Humans. Written in Golang'
 arch=('x86_64')
 url="https://github.com/mr-karan/doggo"
 license=('GPL')
@@ -13,7 +13,7 @@ source=(
   "doggo.fish"
 )
 sha256sums=(
-  '37452fbb204645560e0f3a496fb9f4af7573537edc69ce9e5e7d66fbf6064a03'
+  '187d2a23402427aed8ab7c6fa704ffc1534bd594535c64f318f8904229f00647'
   '313b1a31dbf47d67e97e8d3d8d4832bfc726778ee1b6c796aa869ee214d147dc'
   'efea1e72a833ba2c3e32498c10b80eb9a156d07a1ce2733a0fb554f812596f52'
 )
