@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Apifox
+Exec=/opt/apifox/apifox %U
+Comment=Apifox = Postman + Swagger + Mock + Test
+Comment[zh_CN]=Postman + Swagger + Mock + Test
+Terminal=false
+Icon=apifox
+Type=Application
+StartupNotify=true
+StartupWMClass=Apifox
+Categories=Network;Development;Utility;
+

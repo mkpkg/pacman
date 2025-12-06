@@ -1,0 +1,25 @@
+pkgname=apifox
+pkgver=2.7.54
+pkgrel=1
+pkgdesc="API 文档、API 调试、API Mock、API 自动化测试, Apifox = Postman + Swagger + Mock + JMeter"
+arch=("x86_64")
+url="https://www.apifox.com"
+license=('custom')
+depends=('c-ares' 'ffmpeg' 'gtk3' 'libevent' 'libxslt' 'minizip' 'nss' 're2' 'snappy' 'fuse2')
+source=(
+	"${pkgname}-v${pkgver}.tar.gz::https://file-assets.apifox.com/download/Apifox-linux-manual-latest.tar.gz"
+	"apifox.desktop"
+	"apifox.svg")
+sha256sums=('SKIP'
+            '5fc2bf4e72e14d4f59780f93b91d62f4041feea72c76dc3c00eabec280197496'
+            '48dbd5c9727e568c3f19b45d36851eed15fa875a0ca40e83ec35d4e30ecd350d')
+options=(!strip)
+conflicts=("${pkgname}-bin")
+provides=("${pkgname}")
+
+package() {
+  mkdir -p "${pkgdir}/opt/apifox"
+  rsync -avz "${srcdir}/${pkgname}-${pkgver}/" "${pkgdir}/opt/apifox"
+	install -Dm644 "${srcdir}/apifox.desktop" "${pkgdir}/usr/share/applications/apifox.desktop"
+	install -Dm644 "${srcdir}/apifox.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/apifox.svg"
+}

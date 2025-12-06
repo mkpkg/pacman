@@ -2,7 +2,7 @@
 ###
 # @Author: Cloudflying
 # @Date: 2022-06-23 13:19:21
- # @LastEditTime: 2025-03-24 11:41:35
+ # @LastEditTime: 2025-12-06 15:38:39
  # @LastEditors: Cloudflying
 # @Description: 构建 AUR 包
 ###
@@ -42,7 +42,8 @@ fetch_aur()
 # 构建指定包 优先从本地查找 否则从 aur clone 仓库直接构建
 _build()
 {
-  _makepkg_options="--syncdeps  --noconfirm --rmdeps --force --cleanbuild --clean"
+  # _makepkg_options="--syncdeps  --noconfirm --rmdeps --force --cleanbuild --clean"
+  _makepkg_options="--syncdeps  --noconfirm --rmdeps --force"
   cd "${BUILD_DIR}" || exit 1
   name=$1
   [ -z ${name} ] && echo "Type aur name please" && exit 1
