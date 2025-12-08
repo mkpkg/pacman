@@ -1,5 +1,5 @@
 pkgname=dxvk-nvapi
-pkgver=0.5.4
+pkgver=0.9.0
 pkgrel=1
 pkgdesc='Alternative NVAPI implementation on top of DXVK. '
 arch=('x86_64')
