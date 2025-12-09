@@ -2,7 +2,7 @@
 ###
 # @Author: Cloudflying
 # @Date: 2022-06-23 13:19:21
- # @LastEditTime: 2025-12-06 15:38:39
+ # @LastEditTime: 2025-12-09 17:53:39
  # @LastEditors: Cloudflying
 # @Description: 构建 AUR 包
 ###
@@ -67,7 +67,7 @@ _build()
   if [[ -z "$(ls ${BUILD_DIR}/${name}/*.zst)" ]]; then
     echo "Build Fail"
   else
-    cp -fr ${BUILD_DIR}/${name}/*.zst ${REPO_PATH}
+    cp -fr ${BUILD_DIR}/${name}/*.pkg.tar.zst ${REPO_PATH}
     echo " ==> Move Package to repo path"
     cd ${ROOT_DIR} || exit 1
     # rm -fr "${BUILD_DIR}/${name}"
