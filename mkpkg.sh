@@ -2,18 +2,18 @@
 ###
 # @Author: Cloudflying
 # @Date: 2022-06-23 13:19:21
- # @LastEditTime: 2025-12-09 17:53:39
+ # @LastEditTime: 2025-12-09 19:26:43
  # @LastEditors: Cloudflying
 # @Description: 构建 AUR 包
 ###
 
-ROOT_DIR=$(realpath $(dirname $0))
+ROOT_DIR=$(realpath $(dirname "$0"))
 PKGBUILD_PATH="${ROOT_DIR}/PKGBUILD"
 BUILD_USER='builder'
 BUILD_DIR="/tmp/build"
 mkdir -p ${BUILD_DIR}
 REPO_PATH=${ROOT_DIR}/repo
-mkdir -p ${REPO_PATH}
+mkdir -p "${REPO_PATH}"
 
 git config --global init.defaultBranch main
 git config --global user.name "imxieke"
@@ -26,27 +26,23 @@ DLAGENTS=('file::/usr/bin/curl -qgC - -o %o %u'
   'https::/usr/bin/axel -n 16 -c -k -a -U Mozilla/5.0 -o %o %u'
   'rsync::/usr/bin/rsync --no-motd -z %u %o'
   'scp::/usr/bin/scp -C %u %o')
-export MAKEFLAGS="-j $(nproc)"
-export PACKAGER="Cloud Flying <oss@live.hk>"
 
 [ -z "$(id -u builders 2>&1 >/dev/null | grep user)" ] && useradd -s /bin/nologin ${BUILD_USER}
 
 # 获取 AUR 包仓库
 fetch_aur()
 {
-  if [[ ! -d ${BUILD_DIR}/${name} ]]; then
-    git clone --depth=1 "https://aur.archlinux.org/${name}.git" ${BUILD_DIR}/${name}
+  if [[ ! -d "${BUILD_DIR}/${name}" ]]; then
+    git clone --depth=1 "https://aur.archlinux.org/${name}.git" "${BUILD_DIR}/${name}"
   fi
 }
 
 # 构建指定包 优先从本地查找 否则从 aur clone 仓库直接构建
 _build()
 {
-  # _makepkg_options="--syncdeps  --noconfirm --rmdeps --force --cleanbuild --clean"
-  _makepkg_options="--syncdeps  --noconfirm --rmdeps --force"
   cd "${BUILD_DIR}" || exit 1
   name=$1
-  [ -z ${name} ] && echo "Type aur name please" && exit 1
+  [ -z "${name}" ] && echo "Type aur name please" && exit 1
   if [[ -f "${PKGBUILD_PATH}/${name}/PKGBUILD" ]]; then
     echo "==> Fetch ${name} from Local"
     cp -fr "${PKGBUILD_PATH}/${name}" "${BUILD_DIR}/"
@@ -58,29 +54,22 @@ _build()
 
   [ -f "${BUILD_DIR}/${name}/PKGBUILD" ] && . "${BUILD_DIR}/${name}/PKGBUILD"
 
-  if [[ -f "${ROOT_DIR}/makepkg.conf" ]]; then
-    makepkg --config ${ROOT_DIR}/makepkg.conf ${_makepkg_options}
-  else
-    makepkg ${_makepkg_options}
-  fi
+  makepkg --syncdeps --noconfirm --rmdeps --force --config "${ROOT_DIR}/conf/makepkg.conf"
+  # makepkg --syncdeps  --noconfirm --rmdeps --force --cleanbuild --clean --config "${ROOT_DIR}/conf/makepkg.conf"
 
-  if [[ -z "$(ls ${BUILD_DIR}/${name}/*.zst)" ]]; then
-    echo "Build Fail"
-  else
-    cp -fr ${BUILD_DIR}/${name}/*.pkg.tar.zst ${REPO_PATH}
-    echo " ==> Move Package to repo path"
-    cd ${ROOT_DIR} || exit 1
-    # rm -fr "${BUILD_DIR}/${name}"
-  fi
+  rsync -avz --progress --remove-source-files /tmp/mkpkg/packages/*.pkg.tar.zst* "${REPO_PATH}"
+  echo " ==> Move Package to repo path"
+  cd "${ROOT_DIR}" || exit 1
+  # rm -fr "${BUILD_DIR}/${name}"
 }
 
 build_aur_all()
 {
-  cd ${ROOT_DIR}/build
+  cd "${ROOT_DIR}/build" || exit 1
   for pkg in $(cat $ROOT_DIR/packages.txt); do
     REPO="https://aur.archlinux.org/${pkg}.git"
-    [ ! -d "$pkg" ] && git clone --depth=1 ${REPO}
-    cd ${pkg}
+    [ ! -d "$pkg" ] && git clone --depth=1 "${REPO}"
+    cd "${pkg}" || exit 1
     sudo -Hu ${BUILD_USER} makepkg
     exit
   done
@@ -102,7 +91,7 @@ __init()
   sudo chmod 777 -R /tmp/build
   sudo chmod 777 -R /data/repo
   sudo chmod 777 /etc/pacman.d/mirrorlist
-  echo "Server = https://mirrors.ustc.edu.cn/archlinux/\$repo/os/\$arch" | sudo tee /etc/pacman.d/mirrorlist
+  echo 'Server = https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch' | sudo tee /etc/pacman.d/mirrorlist
 
   if [[ -z "$(grep mkpkg /etc/pacman.conf)" ]]; then
     echo "[mkpkg]" | sudo tee -a /etc/pacman.conf
@@ -116,9 +105,14 @@ _usage()
   echo "mkpkg.sh build pkgname"
 }
 
+_sync()
+{
+  rsync -avz --progress --remove-source-files -e "ssh" ./repo/*.pkg.tar.zst* eu-nl-3:/data/web/mirrors/mkpkg/pacman
+}
+
 case "$1" in
   build)
-    _build $2
+    _build "$2"
     ;;
   gendb)
     _gen_repo

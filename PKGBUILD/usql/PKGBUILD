@@ -1,5 +1,5 @@
 pkgname=usql
-pkgver=0.19.21
+pkgver=0.19.26
 pkgrel=1
 pkgdesc="Universal command-line interface for SQL databases"
 arch=(amd64 arm arm64 x86_64)
@@ -8,7 +8,7 @@ license=('MIT')
 provides=(usql)
 conflicts=(usql-bin)
 source=("$url/releases/download/v$pkgver/usql-$pkgver-linux-$arch.tar.bz2")
-sha256sums=('80db7343111abbd6536b81d84a624f645b44f3549320d70d8a40c2a1d780faee')
+sha256sums=('b90e03da0b11c684d28df8a27481f02831c59ba7f572b0395c27a781d48ae066')
 
 package() {
   install -Dm0755 usql -t "$pkgdir/usr/bin/"
