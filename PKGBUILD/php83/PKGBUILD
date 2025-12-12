@@ -1,0 +1,15 @@
+pkgname=php83
+pkgver=8.3.28
+pkgrel=1
+pkgdesc="A general-purpose scripting language that is especially suited to web development"
+arch=(x86_64)
+url="https://www.php.net"
+license=('PHP-3.01')
+source=("https://github.com/php/php-src/archive/refs/tags/php-${pkgver}.tar.gz")
+sha256sums=('b90e03da0b11c684d28df8a27481f02831c59ba7f572b0395c27a781d48ae066')
+
+package() {
+  echo "${pkgname}"
+  # install -Dm0755 usql -t "$pkgdir/usr/bin/"
+	# install -Dm0644 LICENSE -t "$pkgdir/usr/share/licenses/${pkgname}/"
+}
